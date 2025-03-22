@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">bilgiPaylasimiApp</string>
+    <string name="kullaniciGiris">Giriş Yap</string>
+    <string name="kullaniciKaydi">Kayıt Ol</string>
+    <string name="mail">Email</string>
+    <string name="sifre">Şifre</string>
+    <string name="giris">Giriş Yap</string>
+    <string name="kayit">Kayıt Ol</string>
+    <string name="kayitOlButtonText">Kayıt Olmak İçin Tıklayın</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="yeniBilgi">Yeni Bilgi Ekle</string>
+    <string name="baslik">Başlık</string>
+    <string name="bilgi">Bilgi</string>
+    <string name="ekle">Ekle</string>
+    <string name="kategori">Kategori</string>
+    <string name="basligaGoreAra">Başlığa Göre Ara</string>
+    <string name="kayitOl"><u>Kayıt Ol</u></string>
+</resources>

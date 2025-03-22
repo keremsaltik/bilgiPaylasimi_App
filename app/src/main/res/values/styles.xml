@@ -1,0 +1,8 @@
+<resources>
+    <!-- Diğer stiller burada olabilir -->
+
+    <style name="MenuItemStyle" parent="Widget.AppCompat.ActionButton">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+<item
+   android:title="Profil"
+    android:id="@+id/menuProfile"
+    android:icon="@drawable/outline_account_circle_24"
+    app:showAsAction="withText"
+    />
+
+    <item
+        android:title="Çıkış Yap"
+        android:id="@+id/menuLogOut"
+        android:icon="@drawable/baseline_exit_to_app_24"
+        app:showAsAction="withText"
+
+        />
+</menu>

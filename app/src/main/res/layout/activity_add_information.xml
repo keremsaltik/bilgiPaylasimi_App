@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/yeniBilgiText"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:text="@string/yeniBilgi"
+        android:textAlignment="center"
+        android:textSize="25dp"
+        android:layout_marginTop="100dp"
+        android:paddingTop="30dp"/>
+
+
+
+    <EditText
+        android:id="@+id/titleField"
+        android:layout_width="400dp"
+        android:layout_height="60dp"
+        android:hint="@string/baslik"
+        android:inputType="textCapSentences"
+        android:layout_below="@id/yeniBilgiText"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/custom_edittext_background"
+        android:padding="16dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#888888"
+        android:gravity="start|center_vertical"/>
+
+    <EditText
+        android:id="@+id/informationField"
+        android:layout_width="400dp"
+        android:layout_height="250dp"
+        android:hint="@string/bilgi"
+        android:layout_below="@id/titleField"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/custom_edittext_background"
+        android:padding="16dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#888888"
+        android:gravity="start|center_vertical"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/category"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/kategori"
+        android:layout_below="@id/informationField"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+        
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:background="@drawable/custom_edittext_background"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+    
+    <Button
+        android:id="@+id/addInfoButton"
+        android:layout_width="150dp"
+        android:layout_below="@id/category"
+        android:layout_marginTop="25dp"
+        android:layout_height="70dp"
+        android:text="@string/ekle"
+        android:layout_centerInParent="true"
+        android:textColor="#7C7A7A"
+        android:backgroundTint="#EBEAEA"
+        android:padding="16dp"
+        android:textSize="18sp"
+        android:gravity="center"
+       />
+
+</RelativeLayout>

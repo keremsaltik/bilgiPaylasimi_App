@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".HomePage">
+
+
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolBar"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="@drawable/rounded_toolbar"
+    app:title="Ana sayfa"
+    />
+    <EditText
+        android:id="@+id/searchField"
+        android:layout_width="400dp"
+        android:layout_height="75dp"
+        android:hint="@string/basligaGoreAra"
+        android:maxLines="1"
+        android:inputType="textCapSentences"
+        android:layout_below="@id/toolBar"
+        android:layout_marginTop="10dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/custom_edittext_background"
+        android:padding="16dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#888888"
+        android:gravity="start|center_vertical"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/category"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/kategori"
+        android:layout_below="@id/searchField"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="22dp"
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_field"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:background="@drawable/custom_edittext_background"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/clearButton"
+        android:layout_width="125dp"
+        android:layout_height="75dp"
+        android:layout_below="@id/searchField"
+
+        android:text="Temizle"
+        android:layout_toRightOf="@id/category"
+        android:textColor="#7C7A7A"
+        android:backgroundTint="#EBEAEA"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:layout_marginTop="9dp"/>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@color/white"
+        android:elevation="6dp"
+        app:icon="@drawable/baseline_add_24" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/posts"
+        android:layout_below="@+id/category"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_reccycle_view" />
+
+</RelativeLayout>

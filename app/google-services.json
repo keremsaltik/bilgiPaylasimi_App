@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1052773567253",
+    "project_id": "bilgipaylasimiapp",
+    "storage_bucket": "bilgipaylasimiapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052773567253:android:96572728256f42b9ea771c",
+        "android_client_info": {
+          "package_name": "com.example.bilgipaylasimiapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgkbn1Dti4ko91-HmVkEXcRgIEeeoYHaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

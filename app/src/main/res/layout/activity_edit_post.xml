@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:id="@+id/main"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/guncelleText"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:text="Bilgiyi Güncelle"
+        android:textAlignment="center"
+        android:textSize="25dp"
+        android:layout_marginTop="100dp"
+        android:paddingTop="30dp"/>
+
+    <EditText
+        android:id="@+id/editTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
+        android:hint="Başlık"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/custom_edittext_background"
+        android:padding="16dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#888888"
+        android:gravity="start|center_vertical"
+        />
+
+    <EditText
+        android:id="@+id/editInfo"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:hint="@string/bilgi"
+        android:inputType="textMultiLine"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/custom_edittext_background"
+        android:padding="16dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#888888"
+        android:gravity="start|top"
+        android:textSize="18sp"
+        />
+
+
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kaydet"
+        android:textColor="#7C7A7A"
+        android:backgroundTint="#EBEAEA"
+        android:padding="16dp"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginTop="25dp"/>
+</LinearLayout>
