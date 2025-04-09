@@ -11,7 +11,6 @@ public class Information {
     private String authorId;
     private String status = "pending";
 
-
     // Boş constructor Firebase için gerekli
     public Information() {
     }
@@ -21,6 +20,7 @@ public class Information {
         this.information = information;
         this.category = category;
         this.authorId = authorId;  // Bu satır eksikti
+
     }
 
     public String getTitle() {

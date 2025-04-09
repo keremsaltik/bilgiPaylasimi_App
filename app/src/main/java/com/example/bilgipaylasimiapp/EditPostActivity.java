@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class EditPostActivity extends AppCompatActivity {
     private EditText editTitle, editInfo;
     private Button saveButton;
-    private FirebaseFirestore firestore;
+    private PostService postService;
     private String postId;
     private Information post;
     @Override
@@ -28,15 +28,21 @@ public class EditPostActivity extends AppCompatActivity {
         editTitle = findViewById(R.id.editTitle);
         editInfo = findViewById(R.id.editInfo);
         saveButton = findViewById(R.id.saveButton);
-        firestore = FirebaseFirestore.getInstance();
+        postService = new PostService();
 
 
         Intent intent = getIntent();
         postId = intent.getStringExtra("postId"); // Post ID'sini al
-        getPostData(postId);
+        fetchPostData(postId);
 
         saveButton.setOnClickListener(v -> {
-            updatePost(post);
+            String updatedTitle = editTitle.getText().toString();
+            String updatedInfo = editInfo.getText().toString();
+            if(post != null){
+                post.setTitle(updatedTitle);
+                post.setInformation(updatedInfo);
+                updatePost(postId,post);
+            }
         });
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -44,42 +50,26 @@ public class EditPostActivity extends AppCompatActivity {
             return insets;
         });
     }
-    private void getPostData(String postId) {
-        firestore.collection("posts").document(postId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        post = documentSnapshot.toObject(Information.class);
-                        if (post != null) {
-                            editTitle.setText(post.getTitle());
-                            editInfo.setText(post.getInformation());
-                        }
-                    }
-                });
+    private void fetchPostData(String postId) {
+        postService.fetchPost(postId,
+                fetchedPost -> {
+                    post = fetchedPost;
+                    editTitle.setText(post.getTitle());
+                    editInfo.setText(post.getInformation());
+                },
+                e -> Toast.makeText(this, "Gönderi yüklenirken hata: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+        );
     }
 
-    private void updatePost(Information post) {
-        String updatedTitle = editTitle.getText().toString();
-        String updatedInfo = editInfo.getText().toString();
-
-        if (!updatedTitle.isEmpty() && !updatedInfo.isEmpty()) {
-            post.setTitle(updatedTitle);
-            post.setInformation(updatedInfo);
-
-            firestore.collection("posts")
-                    .document(postId)
-                    .update( "title", updatedTitle,
-                            "information", updatedInfo)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(EditPostActivity.this, "Gönderi başarıyla güncellendi.", Toast.LENGTH_SHORT).show();
-                        finish();
-                        Intent intent = new Intent(this, HomePage.class);
-                        startActivity(intent);
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(EditPostActivity.this, "Gönderi güncellenirken hata oluştu.", Toast.LENGTH_SHORT).show();
-                    });
-        } else {
-            Toast.makeText(this, "Lütfen tüm alanları doldurun.", Toast.LENGTH_SHORT).show();
-        }
+    private void updatePost(String postId, Information post) {
+        postService.updatePost(postId, post,
+                aVoid -> {
+                    Toast.makeText(this, "Gönderi başarıyla güncellendi.", Toast.LENGTH_SHORT).show();
+                    finish();
+                    Intent intent = new Intent(this, HomePage.class);
+                    startActivity(intent);
+                },
+                e -> Toast.makeText(this, "Hata: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+        );
     }
 }

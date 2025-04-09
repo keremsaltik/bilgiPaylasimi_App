@@ -15,7 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetailInformationActivity extends AppCompatActivity {
 
-    private FirebaseFirestore firestore;
+    private  PostService postService;
     private TextView titleView, contentView, categoryView;
     private String postId;
 
@@ -28,7 +28,7 @@ public class DetailInformationActivity extends AppCompatActivity {
         titleView = findViewById(R.id.titleView);
         contentView = findViewById(R.id.contentView);
         categoryView = findViewById(R.id.categoryView);
-        firestore = FirebaseFirestore.getInstance();
+        postService = new PostService();
 
 
         postId = getIntent().getStringExtra("postId");
@@ -36,24 +36,10 @@ public class DetailInformationActivity extends AppCompatActivity {
     }
 
     private void fetchPostDetail(String postId) {
-        firestore.collection("posts")
-                .document(postId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Information post = documentSnapshot.toObject(Information.class);
-                        if (post != null) {
-                            displayPostDetail(post);
-                        } else {
-                            showErrorAndFinish("Gönderi bulunamadı.");
-                        }
-                    } else {
-                        showErrorAndFinish("Gönderi bulunamadı.");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    showErrorAndFinish("Hata: " + e.getMessage());
-                });
+        postService.fetchPost(postId,
+                post -> displayPostDetail(post),
+                e -> showErrorAndFinish("Hata: " + e.getMessage())
+        );
     }
 
     private void displayPostDetail(Information post) {

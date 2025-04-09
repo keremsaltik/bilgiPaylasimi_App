@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +35,7 @@ public class AddInformationActivity extends AppCompatActivity {
     private EditText titleText, informationText;
     private Button addButton;
     private FirebaseAuth mAuth;
-    FirebaseFirestore db;
+    private PostService postService;
     String item;
 
     @Override
@@ -45,7 +46,7 @@ public class AddInformationActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        postService = new PostService();
 
 
         titleText = findViewById(R.id.titleField);
@@ -73,14 +74,16 @@ public class AddInformationActivity extends AppCompatActivity {
                 String title = titleText.getText().toString().trim();
                 String information = informationText.getText().toString().trim();
 
-                if (item == null || item.isEmpty() || title.isEmpty() || information.isEmpty()) {
-                    Toast.makeText(AddInformationActivity.this,"Lütfen tüm alanları doldurun",Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    String userId = user.getUid();
-                    addData(title, information, item, userId);
-                }
+                FirebaseUser user = mAuth.getCurrentUser();
+                String userId = user.getUid();
+                Information info = new Information(title,information,item,userId);
+                postService.createPost(info,id->{
+                    Toast.makeText(AddInformationActivity.this, "Gönderi başarıyla eklendi", Toast.LENGTH_SHORT).show();
+                    finish();
+                    Intent intent = new Intent(AddInformationActivity.this, HomePage.class);
+                    startActivity(intent);
+                }, e -> Toast.makeText(AddInformationActivity.this, "Hata: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
             }
         });
 
@@ -93,23 +96,5 @@ public class AddInformationActivity extends AppCompatActivity {
     }
 
 
-    private void addData(String title, String information, String category, String author) {
-        Information info = new Information(title, information, category, author);
 
-
-        db.collection("posts").document().set(info.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(AddInformationActivity.this, "Post başarıyla eklendi", Toast.LENGTH_SHORT).show();
-                finish();
-                Intent intent = new Intent(AddInformationActivity.this, HomePage.class);
-                startActivity(intent);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(AddInformationActivity.this, "Post eklenirken hata oluştu. Lütfen tekrar deneyiniz", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 }

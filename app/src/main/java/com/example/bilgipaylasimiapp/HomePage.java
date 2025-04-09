@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -44,10 +45,12 @@ public class HomePage extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PostAdapter adapter;
     private List<Information> postList = new ArrayList<>();
-    private FirebaseFirestore firestore;
+    private PostService postService;
     String[] items = {"Temel Bilgiler", "Bilim", "Teknoloji", "Sosyal Bilimler", "Sanat ve Kültür", "Tarih ve Coğrafya", "Sağlık ve Tıp", "İş ve Ekonomi", "Hukuk ve Politika", "Felsefe ve Mantık", "Spor", "Edebiyat ve Dil", "Çevre ve Doğa"};
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> adapterItems;
+
+    private ListenerRegistration postListener;
     String item;
 
     @Override
@@ -67,7 +70,7 @@ public class HomePage extends AppCompatActivity {
         adapter = new PostAdapter(postList, this);
         recyclerView.setAdapter(adapter);
 
-        firestore = FirebaseFirestore.getInstance();
+        postService = new PostService();
         autoCompleteTextView = findViewById(R.id.auto_complete_field);
 
         adapterItems = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, items);
@@ -84,7 +87,7 @@ public class HomePage extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchPosts(s.toString());
+                searchPosts(s.toString(), autoCompleteTextView.getText().toString());
             }
 
             @Override
@@ -113,23 +116,27 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void fetchPosts() {
-        firestore.collection("posts")
-                .addSnapshotListener((snapshot, e) -> {
-                    if (e != null) {
-                        Toast.makeText(HomePage.this, "Veri alınırken hata oluştu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+        if (postListener != null){
+            postListener.remove(); // Önceki dinleyicileri temizle
+        }
+        postListener = postService.fetchAllPosts(
+                posts -> {
+                    postList.clear();
+                    postList.addAll(posts);
+                    adapter.notifyDataSetChanged();
+                },
+                e -> Toast.makeText(this,"Veri alınırken hata oluştu" + e.getMessage(), Toast.LENGTH_SHORT).show()
+        );
+    }
 
-                    if (snapshot != null && !snapshot.isEmpty()) {
-                        postList.clear();
-                        for (DocumentSnapshot document : snapshot.getDocuments()) {
-                            Information post = document.toObject(Information.class);
-                            post.setId(document.getId());
-                            postList.add(post);
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (postListener != null) {
+            postListener.remove();
+        }
     }
 
     @Override
@@ -155,52 +162,22 @@ public class HomePage extends AppCompatActivity {
         return true;
     }
 
-    private void searchPosts(String query) {
-        String selectedCategory = autoCompleteTextView.getText().toString();
-
-
-        Query queryRef = firestore.collection("posts");
-
-        if (!selectedCategory.isEmpty()) {
-            queryRef = queryRef.whereEqualTo("category", selectedCategory);
+    private void searchPosts(String query, String category) {
+        if (postListener != null){
+            postListener.remove(); // Gerçek zamanlı dinlemeyi durdur
         }
-        if (!query.isEmpty()) {
-            queryRef = queryRef.whereGreaterThanOrEqualTo("title", query)
-                    .whereLessThanOrEqualTo("title", query + "\uf8ff");
-        }
-
-
-        queryRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                QuerySnapshot snapshot = task.getResult();
-                if (snapshot != null) {
-                    postList.clear();
-                    for (DocumentSnapshot document : snapshot.getDocuments()) {
-                        Information post = document.toObject(Information.class);
-                        post.setId(document.getId());
-                        postList.add(post);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-            } else {
-                Exception e = task.getException();
-                String errorMessage = "Arama başarısız oldu: " + (e != null ? e.getMessage() : "Bilinmeyen hata");
-                Toast.makeText(HomePage.this, errorMessage, Toast.LENGTH_SHORT).show();
-                Log.d("TAG", errorMessage);
-            }
+        postService.searchPosts(query,category, posts -> {
+            postList.clear();
+            postList.addAll(posts);
+            adapter.notifyDataSetChanged();
+        }, e -> {
+            Toast.makeText(this,"Veri alınırken hata oluştu" + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 
     private void filterPostsByCategory(String category) {
         String searchQuery = searchEditText.getText().toString(); // Arama metnini al
 
-
-        if (!category.isEmpty() || !searchQuery.isEmpty()) {
-            searchPosts(searchQuery);
-        } else {
-
-            fetchPosts();
-        }
     }
 
 
