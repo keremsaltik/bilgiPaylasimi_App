@@ -1,7 +1,6 @@
 package com.example.bilgipaylasimiapp;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,7 @@ import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostHolderView> {
 
-    private List<Information> postList;
+    private List<Post> postList;
     private AppCompatActivity activity;
 
 
@@ -24,7 +23,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostHolderView> {
         int position;
     }
 
-    public PostAdapter(List<Information> postList, AppCompatActivity activity) {
+    public PostAdapter(List<Post> postList, AppCompatActivity activity) {
         this.postList = postList;
         this.activity = activity;
     }
@@ -39,7 +38,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostHolderView> {
 
     @Override
     public void onBindViewHolder(@NonNull PostHolderView holder, int position) {
-        Information post = postList.get(position);
+        Post post = postList.get(position);
         holder.postTitle.setText(post.getTitle());
         holder.postInfo.setText(post.getInformation());
         //holder.postAuthor.setText(post.getAuthorId());
@@ -50,7 +49,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostHolderView> {
 
                 menu.setHeaderTitle("Seçenekler");
                 menu.add(0, v.getId(), 0, "Düzenle").setOnMenuItemClickListener(item -> {
-                    Information selectedPost = postList.get(adapterPosition);
+                    Post selectedPost = postList.get(adapterPosition);
                     if (activity instanceof ProfileActivity) {
                         Intent intent = new Intent(activity, EditPostActivity.class);
                         intent.putExtra("postId", selectedPost.getId());
@@ -60,7 +59,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostHolderView> {
                 });
                 menu.add(0, v.getId(), 1, "Sil").setOnMenuItemClickListener(item -> {
                     if (activity instanceof ProfileActivity) {
-                        Information selectedPost = postList.get(adapterPosition);
+                        Post selectedPost = postList.get(adapterPosition);
                         ((ProfileActivity) activity).deletePost(selectedPost);
                     }
                     return true;
@@ -69,7 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostHolderView> {
         }
         else if(activity instanceof HomePage){
             holder.itemView.setOnClickListener(v -> {
-                Information selectedPost = postList.get(holder.getAdapterPosition());
+                Post selectedPost = postList.get(holder.getAdapterPosition());
                 String postId = selectedPost.getId();
                 if (postId != null && !postId.isEmpty()) {
                     Intent intent = new Intent(activity, DetailInformationActivity.class);

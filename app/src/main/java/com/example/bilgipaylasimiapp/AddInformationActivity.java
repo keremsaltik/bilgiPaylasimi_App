@@ -11,19 +11,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AddInformationActivity extends AppCompatActivity {
 
@@ -76,7 +70,7 @@ public class AddInformationActivity extends AppCompatActivity {
 
                 FirebaseUser user = mAuth.getCurrentUser();
                 String userId = user.getUid();
-                Information info = new Information(title,information,item,userId);
+                Post info = new Post(title,information,item,userId);
                 postService.createPost(info,id->{
                     Toast.makeText(AddInformationActivity.this, "Gönderi başarıyla eklendi", Toast.LENGTH_SHORT).show();
                     finish();

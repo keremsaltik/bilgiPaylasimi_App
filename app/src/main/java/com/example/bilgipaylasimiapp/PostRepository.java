@@ -1,21 +1,18 @@
 package com.example.bilgipaylasimiapp;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PostRepository {
-    private static PostRepository instance; // Tekil instance
+    private static PostRepository instance; /// Tekil instance
     private FirebaseFirestore db;
 
-    // Private constructor (dışarıdan new ile oluşturulamaz)
+    /// Private constructor (dışarıdan new ile oluşturulamaz)
     private PostRepository() {
         this.db = FirebaseFirestore.getInstance();
     }
@@ -30,8 +27,8 @@ public class PostRepository {
         }
         return  instance;
     }
-    // Gönderi Ekleme
-    public void addPost(Information post, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
+    /// Gönderi Ekleme
+    public void addPost(Post post, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
         db.collection("posts")
                 .add(post.toMap())
                 .addOnSuccessListener(documentReference -> {
@@ -41,14 +38,14 @@ public class PostRepository {
                 .addOnFailureListener(onFailure::onFailure);
     }
 
-    // Gönderiyi alma
-    public void getPost(String postId, OnSuccessListener<Information> onSuccess, OnFailureListener onFailure) {
+    /// Gönderiyi alma
+    public void getPost(String postId, OnSuccessListener<Post> onSuccess, OnFailureListener onFailure) {
         db.collection("posts")
                 .document(postId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        Information post = documentSnapshot.toObject(Information.class);
+                        Post post = documentSnapshot.toObject(Post.class);
                         if (post != null) {
                             post.setId(documentSnapshot.getId());
                             onSuccess.onSuccess(post);
@@ -60,8 +57,8 @@ public class PostRepository {
                 .addOnFailureListener(onFailure::onFailure);
     }
 
-    // Gönderiyi güncelleme
-    public void updatePost(String postId, Information post, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    /// Gönderiyi güncelleme
+    public void updatePost(String postId, Post post, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         db.collection("posts")
                 .document(postId)
                 .update("title", post.getTitle(), "information", post.getInformation())
@@ -69,7 +66,7 @@ public class PostRepository {
                 .addOnFailureListener(onFailure::onFailure);
     }
 
-    // Tüm gönderileri gerçek zamanlı alma
+    /// Tüm gönderileri gerçek zamanlı alma
     public ListenerRegistration fetchAllPosts(OnPostsListener onPostsListener, OnFailureListener onFailure) {
         return db.collection("posts")
                 .addSnapshotListener((snapshot, e) -> {
@@ -78,9 +75,9 @@ public class PostRepository {
                         return;
                     }
                     if (snapshot != null && !snapshot.isEmpty()) {
-                        List<Information> posts = new ArrayList<>();
+                        List<Post> posts = new ArrayList<>();
                         for (QueryDocumentSnapshot document : snapshot) {
-                            Information post = document.toObject(Information.class);
+                            Post post = document.toObject(Post.class);
                             post.setId(document.getId());
                             posts.add(post);
                         }
@@ -89,25 +86,32 @@ public class PostRepository {
                 });
     }
 
-    // Gönderileri arama/filtreleme
-    public void searchPosts(String query, String category, OnSuccessListener<List<Information>> onSuccess, OnFailureListener onFailure) {
+    /// Gönderileri arama/filtreleme
+    public void searchPosts(String query, String category,
+                            OnSuccessListener<List<Post>> onSuccess,
+                            OnFailureListener onFailure) {
         Query queryRef = db.collection("posts");
 
-        if (category != null && !category.isEmpty()) {
+        // Burada yalnızca gelen parametreyi kullanıyoruz, kontrol etmiyoruz.
+        if (category != null) {
             queryRef = queryRef.whereEqualTo("category", category);
         }
-        if (query != null && !query.isEmpty()) {
-            queryRef = queryRef.whereGreaterThanOrEqualTo("title", query)
+
+        if (query != null) {
+            queryRef = queryRef
+                    .whereGreaterThanOrEqualTo("title", query)
                     .whereLessThanOrEqualTo("title", query + "\uf8ff");
         }
 
         queryRef.get()
                 .addOnSuccessListener(snapshot -> {
-                    List<Information> posts = new ArrayList<>();
+                    List<Post> posts = new ArrayList<>();
                     for (QueryDocumentSnapshot document : snapshot) {
-                        Information post = document.toObject(Information.class);
-                        post.setId(document.getId());
-                        posts.add(post);
+                        Post post = document.toObject(Post.class);
+                        if (post != null) {
+                            post.setId(document.getId());
+                            posts.add(post);
+                        }
                     }
                     onSuccess.onSuccess(posts);
                 })
@@ -123,6 +127,6 @@ public class PostRepository {
     }
 
     public interface OnPostsListener {
-        void onPostsUpdated(List<Information> posts);
+        void onPostsUpdated(List<Post> posts);
     }
 }

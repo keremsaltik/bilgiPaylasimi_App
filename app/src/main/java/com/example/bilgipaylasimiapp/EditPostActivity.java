@@ -12,14 +12,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 public class EditPostActivity extends AppCompatActivity {
     private EditText editTitle, editInfo;
     private Button saveButton;
     private PostService postService;
     private String postId;
-    private Information post;
+    private Post post;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +59,7 @@ public class EditPostActivity extends AppCompatActivity {
         );
     }
 
-    private void updatePost(String postId, Information post) {
+    private void updatePost(String postId, Post post) {
         postService.updatePost(postId, post,
                 aVoid -> {
                     Toast.makeText(this, "Gönderi başarıyla güncellendi.", Toast.LENGTH_SHORT).show();

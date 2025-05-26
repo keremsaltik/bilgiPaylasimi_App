@@ -1,15 +1,10 @@
 package com.example.bilgipaylasimiapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -31,7 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseUser cUser = mAuth.getCurrentUser();
     private RecyclerView recyclerView;
     private PostAdapter adapter;
-    private List<Information> postList = new ArrayList<>();
+    private List<Post> postList = new ArrayList<>();
     private FirebaseFirestore firestore;
 
     @Override
@@ -69,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    protected void deletePost(Information post) {
+    protected void deletePost(Post post) {
         if (post == null || post.getId() == null) {
             Toast.makeText(this, "Silinecek gönderi bulunamadı.", Toast.LENGTH_SHORT).show();
             return;
@@ -99,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
                         if (snapshot != null) {
                             postList.clear();
                             for (DocumentSnapshot document : snapshot.getDocuments()) {
-                                Information post = document.toObject(Information.class);
+                                Post post = document.toObject(Post.class);
                                 post.setId(document.getId());
                                 postList.add(post);
                             }

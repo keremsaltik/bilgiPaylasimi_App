@@ -3,7 +3,7 @@ package com.example.bilgipaylasimiapp;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Information {
+public class Post {
     private String id;
     private String title;
     private String information;
@@ -12,10 +12,10 @@ public class Information {
     private String status = "pending";
 
     // Boş constructor Firebase için gerekli
-    public Information() {
+    public Post() {
     }
 
-    public Information(String title, String information, String category, String authorId) {
+    public Post(String title, String information, String category, String authorId) {
         this.title = title;
         this.information = information;
         this.category = category;
@@ -72,7 +72,7 @@ public class Information {
         this.id = id;
     }
 
-    // Firebase'e gönderilmesini istemediğimiz alanları dışarıda bırakmak için toMap metodunu ekliyoruz
+    /// Firebase'e, gönderilmesini istemediğimiz alanları dışarıda bırakmak için toMap metodunu ekliyoruz
     public Map<String, Object> toMap() {
         Map<String, Object> postMap = new HashMap<>();
         postMap.put("title", title);

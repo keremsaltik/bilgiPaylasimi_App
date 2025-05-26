@@ -1,17 +1,10 @@
 package com.example.bilgipaylasimiapp;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetailInformationActivity extends AppCompatActivity {
 
@@ -42,7 +35,7 @@ public class DetailInformationActivity extends AppCompatActivity {
         );
     }
 
-    private void displayPostDetail(Information post) {
+    private void displayPostDetail(Post post) {
         // Başlık ve içeriği TextView'lere set et
         titleView.setText(post.getTitle());
         contentView.setText(post.getInformation());
